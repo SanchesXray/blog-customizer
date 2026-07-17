@@ -11,19 +11,23 @@ import styles from './Select.module.scss';
 type OptionProps = {
 	option: OptionType;
 	onClick: (value: OptionType['value']) => void;
+	isSelected?: boolean;
 };
 
 export const Option = (props: OptionProps) => {
 	const {
 		option: { value, title, optionClassName, className },
 		onClick,
+		isSelected = false,
 	} = props;
 	const optionRef = useRef<HTMLLIElement>(null);
 
 	const handleClick =
 		(clickedValue: OptionType['value']): MouseEventHandler<HTMLLIElement> =>
 		() => {
-			onClick(clickedValue);
+			if (!isSelected) {
+				onClick(clickedValue);
+			}
 		};
 
 	useEnterOptionSubmit({
@@ -37,9 +41,11 @@ export const Option = (props: OptionProps) => {
 			className={clsx(styles.option, styles[optionClassName || ''])}
 			value={value}
 			onClick={handleClick(value)}
-			tabIndex={0}
+			tabIndex={isSelected ? -1 : 0}
 			data-testid={`select-option-${value}`}
-			ref={optionRef}>
+			ref={optionRef}
+			data-selected={isSelected}
+			aria-selected={isSelected}>
 			<Text family={isFontFamilyClass(className) ? className : undefined}>
 				{title}
 			</Text>

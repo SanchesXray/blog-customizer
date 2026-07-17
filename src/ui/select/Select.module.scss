@@ -73,6 +73,10 @@
 	cursor: pointer;
 }
 
+.option[aria-selected='true'] {
+	background-color: rgb(0 0 0 / 5%);
+}
+
 .option:hover {
 	background: var(--grey, #e8e8e8);
 }

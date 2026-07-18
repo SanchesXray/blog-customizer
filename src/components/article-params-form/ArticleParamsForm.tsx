@@ -23,27 +23,20 @@ import styles from './ArticleParamsForm.module.scss';
 type ArticleParamsFormProps = {
 	currentParams: ArticleStateType;
 	onApply: (params: ArticleStateType) => void;
-	onReset: () => void;
 };
 
 export const ArticleParamsForm = ({
 	currentParams,
 	onApply,
-	onReset,
 }: ArticleParamsFormProps) => {
 	// состояние открытия панели
-	const [isOpen, setIsOpen] = useState(false);
+	const [isPanelOpen, setIsPanelOpen] = useState(false);
 
 	// локальное состояние формы
 	const [formState, setFormState] = useState<ArticleStateType>(currentParams);
 
 	// реф для панели
 	const panelRef = useRef<HTMLElement>(null);
-
-	// синхронизация с пропсами
-	useEffect(() => {
-		setFormState(currentParams);
-	}, [currentParams]);
 
 	// закрытие по клику вне
 	useEffect(() => {
@@ -52,20 +45,20 @@ export const ArticleParamsForm = ({
 				panelRef.current &&
 				!panelRef.current.contains(event.target as Node)
 			) {
-				setIsOpen(false);
+				setIsPanelOpen(false);
 			}
 		};
 
-		if (isOpen) {
+		if (isPanelOpen) {
 			document.addEventListener('mousedown', handleClickOutside);
 		}
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isOpen]);
+	}, [isPanelOpen]);
 
 	// переключение панели
-	const togglePanel = () => setIsOpen(!isOpen);
+	const togglePanel = () => setIsPanelOpen(!isPanelOpen);
 
 	// изменение поля формы
 	const handleFieldChange = (
@@ -79,24 +72,24 @@ export const ArticleParamsForm = ({
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		onApply(formState);
-		setIsOpen(false);
+		setIsPanelOpen(false);
 	};
 
 	// сброс формы
 	const handleReset = () => {
 		setFormState(defaultArticleState);
-		onReset();
-		setIsOpen(false);
+		onApply(defaultArticleState);
+		setIsPanelOpen(false);
 	};
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={togglePanel} />
+			<ArrowButton isOpen={isPanelOpen} onClick={togglePanel} />
 
 			<aside
 				ref={panelRef}
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isPanelOpen,
 				})}>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					<div className={styles.formContent}>
@@ -119,8 +112,6 @@ export const ArticleParamsForm = ({
 							onChange={(value) => handleFieldChange('fontSizeOption', value)}
 						/>
 
-						<Separator />
-
 						<Select
 							title='Цвет шрифта'
 							options={fontColors}
@@ -128,14 +119,14 @@ export const ArticleParamsForm = ({
 							onChange={(value) => handleFieldChange('fontColor', value)}
 						/>
 
+						<Separator />
+
 						<Select
 							title='Цвет фона'
 							options={backgroundColors}
 							selected={formState.backgroundColor}
 							onChange={(value) => handleFieldChange('backgroundColor', value)}
 						/>
-
-						<Separator />
 
 						<Select
 							title='Ширина контента'

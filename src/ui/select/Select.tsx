@@ -84,21 +84,15 @@ export const Select = (props: SelectProps) => {
 				</div>
 				{isOpen && (
 					<ul className={styles.select} data-testid='selectDropdown'>
-						{options.map((option) => {
-							const isSelected = selected?.value === option.value;
-							return (
+						{options
+							.filter((option) => selected?.value !== option.value)
+							.map((option) => (
 								<Option
 									key={option.value}
 									option={option}
-									onClick={() => {
-										if (!isSelected) {
-											handleOptionClick(option);
-										}
-									}}
-									isSelected={isSelected}
+									onClick={() => handleOptionClick(option)}
 								/>
-							);
-						})}
+							))}
 					</ul>
 				)}
 			</div>

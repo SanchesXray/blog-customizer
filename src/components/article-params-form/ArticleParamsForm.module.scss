@@ -25,6 +25,13 @@
 	border-right: 1px solid #000000;
 }
 
+.formContent {
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+	margin-bottom: 40px;
+}
+
 .bottomContainer {
 	display: flex;
 	justify-content: space-between;

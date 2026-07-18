@@ -78,6 +78,10 @@
 }
 
 .option:hover {
+	background: var(--grey, #e8e8e8);
+}
+
+.option:active {
 	background: var(--grey, #c4c4c4);
 }
 
